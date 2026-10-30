@@ -1,0 +1,25 @@
+# Compilados y empaquetados
+out/
+outtest/
+dist/
+salida/
+target/
+build/
+*.class
+*.jar
+
+# Android Studio / Gradle
+.gradle/
+.idea/
+*.iml
+local.properties
+captures/
+.cxx/
+
+# Claves de firma: nunca subirlas
+*.jks
+*.keystore
+
+# Sistema
+.DS_Store
+Thumbs.db

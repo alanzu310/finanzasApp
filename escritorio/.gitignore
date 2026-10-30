@@ -1,0 +1,6 @@
+target/
+out/
+outtest/
+dist/
+salida/
+*.class

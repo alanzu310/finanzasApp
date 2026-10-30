@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.MisFinanzas" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">#1F3864</item>
+        <item name="colorPrimaryVariant">#16294A</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#2E5597</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+    </style>
+</resources>
