@@ -42,6 +42,8 @@ public class AlmacenCsv {
         malas += Math.max(0, leer("tarjetas.csv", c -> datos.agregarTarjeta(new Tarjeta(c[0],
                 Double.parseDouble(c[1]), Double.parseDouble(c[2]), Double.parseDouble(c[3]),
                 Double.parseDouble(c[4]), Integer.parseInt(c[5])))));
+        malas += Math.max(0, leer("compras_tarjetas.csv", c -> buscarTarjeta(datos, c[0]).cargarCompra(
+                new CompraTarjeta(LocalDate.parse(c[1]), c[2], Double.parseDouble(c[3])))));
 
         int r = leer("categorias.csv", c -> datos.agregarCategoria(new Categoria(Tipo.valueOf(c[0]), c[1])));
         if (r < 0) {   // primer arranque con categorías
@@ -69,6 +71,15 @@ public class AlmacenCsv {
                 campo(t.getNombre()), String.valueOf(t.getCupo()), String.valueOf(t.getTasaAnual()),
                 String.valueOf(t.getSaldo()), String.valueOf(t.getCapitalMinPct()),
                 String.valueOf(t.getPlazo()))).toList());
+        escribir("compras_tarjetas.csv", d.getTarjetas().stream().flatMap(t -> t.getCompras().stream()
+                .map(c -> String.join(SEP, campo(t.getNombre()), c.fecha().toString(), campo(c.descripcion()),
+                        String.valueOf(c.monto())))).toList());
+    }
+
+    /** La tarjeta con ese nombre; si no existe, la línea se considera dañada. */
+    private static Tarjeta buscarTarjeta(DatosFinanzas datos, String nombre) {
+        return datos.getTarjetas().stream().filter(t -> t.getNombre().equals(nombre)).findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Tarjeta desconocida: " + nombre));
     }
 
     /** Evita que un texto con ';' rompa el formato del archivo. */

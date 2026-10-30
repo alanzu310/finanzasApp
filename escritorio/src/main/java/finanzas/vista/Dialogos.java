@@ -24,6 +24,21 @@ public final class Dialogos {
         return JOptionPane.showInputDialog(padre, mensaje);
     }
 
+    /**
+     * Muestra un formulario con una etiqueta por cada campo.
+     *
+     * @return true si se pulsó Aceptar
+     */
+    public static boolean formulario(Component padre, String titulo, String[] etiquetas, JComponent[] campos) {
+        JPanel panel = new JPanel(new GridLayout(etiquetas.length, 2, 6, 6));
+        for (int i = 0; i < etiquetas.length; i++) {
+            panel.add(new JLabel(etiquetas[i]));
+            panel.add(campos[i]);
+        }
+        return JOptionPane.showConfirmDialog(padre, panel, titulo, JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION;
+    }
+
     /** Muestra un texto largo, no editable y con barra de desplazamiento. */
     public static void texto(Component padre, String titulo, String contenido, Font fuente, Dimension tamano) {
         JTextArea area = new JTextArea(contenido);
