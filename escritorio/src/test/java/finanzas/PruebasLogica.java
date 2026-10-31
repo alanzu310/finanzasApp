@@ -78,8 +78,12 @@ public class PruebasLogica {
         verificar("informe de tarjeta sin saldo",
                 InformeTarjeta.generar(new Tarjeta("Vacía", 500, 10, 0, 3, 6)).contains("no tiene saldo"));
 
-        t.registrarCompra(200);
+        t.registrarCompra(LocalDate.of(2026, 10, 3), "Supermercado", 200);
         verificar("compra suma al saldo", cerca(t.getSaldo(), 1000));
+        verificar("la compra queda en el detalle con su descripción",
+                t.getCompras().size() == 1 && t.getCompras().get(0).descripcion().equals("Supermercado"));
+        verificar("una compra inválida no se anota",
+                lanza(() -> t.registrarCompra(LocalDate.now(), "x", 0)) && t.getCompras().size() == 1);
         t.registrarPago(5000);
         verificar("pago mayor no deja saldo negativo", t.getSaldo() == 0);
     }
@@ -190,7 +194,9 @@ public class PruebasLogica {
         a.cargarCategoriasPorDefecto();
         a.agregarMovimiento(new Movimiento(LocalDate.of(2026, 10, 5), Tipo.GASTO, "Educación", "Libros; útiles", 45.5));
         a.agregarMeta(new Meta("Viaje", 1500, 300));
-        a.agregarTarjeta(new Tarjeta("Visa", 2000, 16.77, 800, 3, 6));
+        Tarjeta visa = new Tarjeta("Visa", 2000, 16.77, 800, 3, 6);
+        visa.registrarCompra(LocalDate.of(2026, 10, 8), "Cena; amigos", 60);
+        a.agregarTarjeta(visa);
         a.setEstimado(YearMonth.of(2026, 10), new Estimado(1300, 900));
         almacen.guardar(a);
 
@@ -202,6 +208,11 @@ public class PruebasLogica {
         verificar("monto exacto", b.getMovimientos().get(0).monto() == 45.5);
         verificar("estimado exacto", b.getEstimado(YearMonth.of(2026, 10)).orElseThrow().gastos() == 900);
         verificar("categorías guardadas", b.categoriasDe(Tipo.GASTO).contains("Ocio"));
+        Tarjeta visaCargada = b.getTarjetas().get(0);
+        verificar("las compras de la tarjeta se conservan", visaCargada.getCompras().size() == 1
+                && visaCargada.getCompras().get(0).monto() == 60
+                && visaCargada.getCompras().get(0).descripcion().equals("Cena  amigos"));
+        verificar("cargar las compras no vuelve a sumarlas al saldo", cerca(visaCargada.getSaldo(), 860));
 
         // Línea dañada: se ignora, se informa y queda copia .bak
         Files.writeString(dir.resolve("metas.csv"), "Viaje;1500.0;300.0\nlinea rota\n");

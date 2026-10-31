@@ -11,7 +11,7 @@ Los datos se guardan en archivos CSV dentro de `~/.finanzas/` (en Windows: `C:\U
 src/main/java/finanzas/
 ├── Main.java                      Punto de entrada: carga los datos y abre la ventana
 ├── modelo/                        Qué datos maneja la aplicación (sin lógica de pantalla ni de archivos)
-│   ├── Tipo, Movimiento, Categoria, Estimado, Escenario
+│   ├── Tipo, Movimiento, Categoria, Estimado, Escenario, CompraTarjeta
 │   └── Meta, Tarjeta              Clases con estado y validaciones
 ├── datos/                         Dónde viven y cómo se guardan los datos
 │   ├── DatosFinanzas              Estado en memoria + operaciones (agregar, quitar, consultar)
